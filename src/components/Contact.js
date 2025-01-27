@@ -4,11 +4,15 @@ import Header from '../Header';
 import { CounterContext } from './CounterContext';  // Import the context
 
 const Contact = () => {
-  const { user } = useContext(CounterContext);
+  const { user, setUser } = useContext(CounterContext);
   return (
     <div>
-         <Header/>
-      <h1>Contact Page {user}</h1>
+         <Header>
+         <h1>Contact Page {user}</h1>
+         <button onClick={() => setUser('Ali Hussain')}>
+        Update Value
+      </button>
+         </Header>
     </div>
   );
 };

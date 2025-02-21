@@ -1,14 +1,15 @@
 // components/Home.js
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Header from "../Header";
 import axios from "axios";
-
+import { Link } from "react-router-dom";
 const Home = () => {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
     file: null
   });
+  const [users, setUsers] = useState([]);
 
   const [errors, setErrors] = useState({});
 
@@ -33,9 +34,10 @@ const Home = () => {
     data.append('name', formData.name);
     data.append('age', formData.age);
     data.append('file', formData.file);
-    axios.post('http://localhost:3000/create/user', data)
+    axios.post('http://localhost:5000/create/user', data)
   .then(response => {
     setErrors({});
+    fetchUsers()
   })
   .catch(error => {
     if (error.response && error.response.data && error.response.data.errors) {
@@ -49,7 +51,20 @@ const Home = () => {
     }
   });
   };
+  const fetchUsers = () => {
+    axios.get('http://localhost:5000/get/users')
+      .then(response => {
+        setUsers(response.data);
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error("Error fetching users:", error);
+      });
+  };
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
   return (
     <Header>
       <div className="container">
@@ -94,6 +109,20 @@ const Home = () => {
                 Submit
               </button>
             </form>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <h2>Users List</h2>
+            <ul className="list-group">
+              {users.map(user => (
+                <li key={user.id} className="list-group-item">
+                  {user.name} - {user.age}
+                  <img src={`http://localhost:5000/${user.file}`} height={100} width={100} alt={user.name}  />
+                <Link to={`http://localhost:3000/edit/user/${user._id}`} >Edit</Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

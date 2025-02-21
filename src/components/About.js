@@ -5,18 +5,23 @@ import { useCart } from '../CartContext'; // Import the hook
 
 const About = () => {
   const { user } = useContext(CounterContext);
-  const { cartItems } = useCart();
+  const { cartItems, removeFromCart } = useCart();
+
+  const removeItemFromCart = (id) => {  
+    removeFromCart(id);
+  }
 
   return (
     <Header>
-    <div>
-     <h1>Cart Items: {cartItems.length} {user}</h1>
-     {cartItems.map((product) => (
+      <div>
+        <h1>Cart Items: {cartItems.length} {user}</h1>
+        {cartItems.map((product) => (
           <div key={product.id} className="col-md-4 mb-4">
-           <p>{product.name}</p>
+            <p>{product.name}</p>
+            <button className="btn btn-primary" onClick={() => removeItemFromCart(product.id)}> remove </button>
           </div>
         ))}
-    </div>
+      </div>
     </Header>
   );
 };
